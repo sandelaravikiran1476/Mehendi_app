@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}All Designs - Mehendi Gallery{% endblock %}
+
+{% block content %}
+<div class="designs-page">
+    <div class="designs-header">
+        <h1>Mehendi Design Gallery</h1>
+        <p>Browse our collection of beautiful Mehendi designs</p>
+    </div>
+
+    <div class="filters-section">
+        <div class="filter-group">
+            <label for="category-filter">Category:</label>
+            <select id="category-filter" onchange="filterDesigns()">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="complexity-filter">Complexity:</label>
+            <select id="complexity-filter" onchange="filterDesigns()">
+                <option value="">All Levels</option>
+                <option value="Easy" {% if selected_complexity == 'Easy' %}selected{% endif %}>Easy</option>
+                <option value="Medium" {% if selected_complexity == 'Medium' %}selected{% endif %}>Medium</option>
+                <option value="Hard" {% if selected_complexity == 'Hard' %}selected{% endif %}>Hard</option>
+            </select>
+        </div>
+
+        <button class="btn btn-secondary" onclick="resetFilters()">Reset Filters</button>
+    </div>
+
+    <div class="designs-grid">
+        {% for design in designs %}
+        <div class="design-card">
+            <div class="design-image">
+                <img src="{{ design.image_url or 'https://via.placeholder.com/250x300?text=' + design.title|replace(' ', '+') }}" alt="{{ design.title }}">
+                <div class="design-overlay">
+                    <a href="{{ url_for('designs.design_detail', design_id=design.id) }}" class="btn btn-small">View Details</a>
+                </div>
+            </div>
+            <div class="design-info">
+                <h3>{{ design.title }}</h3>
+                <p class="category-tag">{{ design.category }}</p>
+                <div class="design-meta">
+                    <span class="complexity-badge complexity-{{ design.complexity|lower|default('medium') }}">
+                        {{ design.complexity or 'Intermediate' }}
+                    </span>
+                    <span class="duration">⏱️ {{ design.duration or '30-60 min' }}</span>
+                </div>
+                <div class="design-rating">
+                    <span class="likes">❤️ {{ design.likes }}</span>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="no-designs">
+            <p>No designs found matching your filters.</p>
+            <a href="{{ url_for('designs.all_designs') }}" class="btn btn-primary">Clear Filters</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function filterDesigns() {
+    const category = document.getElementById('category-filter').value;
+    const complexity = document.getElementById('complexity-filter').value;
+    
+    let url = "{{ url_for('designs.all_designs') }}";
+    const params = [];
+    
+    if (category) params.push('category=' + encodeURIComponent(category));
+    if (complexity) params.push('complexity=' + encodeURIComponent(complexity));
+    
+    if (params.length > 0) {
+        url += '?' + params.join('&');
+    }
+    
+    window.location.href = url;
+}
+
+function resetFilters() {
+    window.location.href = "{{ url_for('designs.all_designs') }}";
+}
+</script>
+{% endblock %}

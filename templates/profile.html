@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Mehendi Designs{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="profile-header">
+        <div class="profile-card">
+            <div class="profile-info">
+                <h1>{{ current_user.full_name or current_user.username }}</h1>
+                <p class="profile-username">@{{ current_user.username }}</p>
+                <p class="profile-email">{{ current_user.email }}</p>
+                <p class="profile-joined">Member since {{ current_user.created_at.strftime('%B %d, %Y') }}</p>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-card">
+                    <span class="stat-number">{{ designs|length }}</span>
+                    <span class="stat-label">Favorite Designs</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ reviews|length }}</span>
+                    <span class="stat-label">Reviews</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-section">
+            <h2>My Favorite Designs</h2>
+            {% if designs %}
+            <div class="designs-grid">
+                {% for design in designs %}
+                <div class="design-card">
+                    <div class="design-image">
+                        <img src="{{ design.image_url or 'https://via.placeholder.com/250x300?text=' + design.title|replace(' ', '+') }}" alt="{{ design.title }}">
+                        <div class="design-overlay">
+                            <a href="{{ url_for('designs.design_detail', design_id=design.id) }}" class="btn btn-small">View</a>
+                        </div>
+                    </div>
+                    <div class="design-info">
+                        <h3>{{ design.title }}</h3>
+                        <p class="category-tag">{{ design.category }}</p>
+                        <p class="complexity">{{ design.complexity or 'Intermediate' }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <p>You haven't added any favorite designs yet.</p>
+                <a href="{{ url_for('designs.all_designs') }}" class="btn btn-primary">Browse Designs</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="profile-section">
+            <h2>My Reviews</h2>
+            {% if reviews %}
+            <div class="reviews-container">
+                {% for review in reviews %}
+                <div class="review-card">
+                    <div class="review-header">
+                        <h3>{{ review.design.title }}</h3>
+                        <span class="review-rating">⭐ {{ review.rating }}/5</span>
+                    </div>
+                    <p class="review-text">{{ review.review_text }}</p>
+                    <p class="review-category">{{ review.design.category }}</p>
+                    <span class="review-date">{{ review.created_at.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <p>You haven't written any reviews yet.</p>
+                <a href="{{ url_for('designs.all_designs') }}" class="btn btn-primary">Explore Designs & Review</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

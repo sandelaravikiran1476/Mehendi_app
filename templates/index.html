@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Mehendi Designs{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>Discover Beautiful Mehendi Designs</h1>
+        <p>Explore traditional and contemporary Mehendi art from around the world</p>
+        <a href="{{ url_for('designs.all_designs') }}" class="btn btn-primary btn-large">Browse Designs</a>
+    </div>
+</div>
+
+<section class="categories-section">
+    <h2>Mehendi Categories</h2>
+    <div class="categories-grid">
+        <div class="category-card" onclick="window.location.href='{{ url_for('designs.category_designs', category='Indian Mehndi') }}'">
+            <div class="category-icon">🇮🇳</div>
+            <h3>Indian Mehndi</h3>
+            <p>Traditional North Indian designs with intricate patterns</p>
+        </div>
+
+        <div class="category-card" onclick="window.location.href='{{ url_for('designs.category_designs', category='Arabic Mehndi') }}'">
+            <div class="category-icon">🇸🇦</div>
+            <h3>Arabic Mehndi</h3>
+            <p>Bold, geometric patterns with floral elements</p>
+        </div>
+
+        <div class="category-card" onclick="window.location.href='{{ url_for('designs.category_designs', category='Indo-Arabic Mehndi') }}'">
+            <div class="category-icon">🎭</div>
+            <h3>Indo-Arabic Mehndi</h3>
+            <p>Perfect fusion of Indian and Arabic styles</p>
+        </div>
+
+        <div class="category-card" onclick="window.location.href='{{ url_for('designs.category_designs', category='Bridal Mehndi') }}'">
+            <div class="category-icon">👰</div>
+            <h3>Bridal Mehndi</h3>
+            <p>Elaborate designs for the special bride</p>
+        </div>
+
+        <div class="category-card" onclick="window.location.href='{{ url_for('designs.category_designs', category='Western/Contemporary Mehndi') }}'">
+            <div class="category-icon">✨</div>
+            <h3>Western/Contemporary</h3>
+            <p>Modern minimalist and artistic styles</p>
+        </div>
+    </div>
+</section>
+
+<section class="featured-section">
+    <h2>Featured Designs</h2>
+    <div class="designs-grid">
+        {% for design in designs %}
+        <div class="design-card">
+            <div class="design-image">
+                <img src="{{ design.image_url or 'https://via.placeholder.com/250x300?text=' + design.title|replace(' ', '+') }}" alt="{{ design.title }}">
+                <div class="design-overlay">
+                    <a href="{{ url_for('designs.design_detail', design_id=design.id) }}" class="btn btn-small">View Details</a>
+                </div>
+            </div>
+            <div class="design-info">
+                <h3>{{ design.title }}</h3>
+                <p class="category-tag">{{ design.category }}</p>
+                <p class="complexity">{{ design.complexity or 'Intermediate' }}</p>
+            </div>
+        </div>
+        {% else %}
+        <p>No designs available yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to Find Your Perfect Design?</h2>
+        <p>Create an account to save your favorite designs and share your reviews</p>
+        {% if not current_user.is_authenticated %}
+        <div class="cta-buttons">
+            <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">Sign Up Now</a>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-secondary">Login</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
