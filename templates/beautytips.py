@@ -278,7 +278,7 @@ def interactive_menu():
             print("  3. Advanced")
             difficulty_input = input("Select difficulty number (or press Enter): ").strip()
             difficulty = None
-            difficulty_map = {1: "Easy", 2: "ss", 3: "Advanced"}
+            difficulty_map = {1: "Easy", 2: "Moderate", 3: "Advanced"}
             if difficulty_input:
                 try:
                     difficulty = difficulty_map[int(difficulty_input)]
