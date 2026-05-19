@@ -1,0 +1,18 @@
+﻿# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+
+# localhost name resolution is handled within DNS itself.
+# 127.0.0.1 localhost
+
+# Added by Docker Desktop
+192.168.1.14 host.docker.internal
+192.168.1.14 gateway.docker.internal
+
+# To allow the same kube context to work on the host and the container:
+127.0.0.1 kubernetes.docker.internal
+
+# Custom domain mapping
+122.175.49.207 mydomain.com
+122.175.49.207 www.mydomain.com
