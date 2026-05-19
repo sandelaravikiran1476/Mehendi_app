@@ -174,7 +174,7 @@ if __name__ == '__main__':
             print("✅ Database initialized with sample designs and demo user!")
             print("📝 Demo Credentials:")
             print("   Username: demo")
-            print("   Password: demo123")
+            print("   Password: demo12345")
 
     # Run the application
     print("\n🌹 Mehendi Designs App is starting...")
