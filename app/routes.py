@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models import User, Design, Review
 from datetime import datetime
+from app.beautytips import BeautyTipDatabase, SkinType, BeautyConcern
 
 auth_bp = Blueprint('auth', __name__)
 main_bp = Blueprint('main', __name__)
@@ -86,6 +87,43 @@ def profile():
     user_designs = current_user.favorites
     user_reviews = current_user.reviews
     return render_template('profile.html', designs=user_designs, reviews=user_reviews)
+
+@main_bp.route('/beautytips')
+def beautytips():
+    db_tips = BeautyTipDatabase()
+    
+    skin_type_str = request.args.get('skin_type')
+    concern_str = request.args.get('concern')
+    difficulty = request.args.get('difficulty')
+    
+    skin_type = None
+    if skin_type_str:
+        for st in SkinType:
+            if st.value == skin_type_str:
+                skin_type = st
+                break
+                
+    concern = None
+    if concern_str:
+        for c in BeautyConcern:
+            if c.value == concern_str:
+                concern = c
+                break
+                
+    tips = db_tips.filter_multiple(skin_type, concern, difficulty)
+    
+    skin_types = [st.value for st in SkinType]
+    concerns = [c.value for c in BeautyConcern]
+    difficulties = ["Easy", "Moderate", "Advanced"]
+    
+    return render_template('beautytips.html', 
+                           tips=tips, 
+                           skin_types=skin_types, 
+                           concerns=concerns, 
+                           difficulties=difficulties,
+                           selected_skin=skin_type_str,
+                           selected_concern=concern_str,
+                           selected_difficulty=difficulty)
 
 # ============ DESIGN ROUTES ============
 

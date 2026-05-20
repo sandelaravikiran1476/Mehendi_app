@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Beauty Tips - Mehendi Designs{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <h2 style="text-align: center; color: #d4a373; margin-bottom: 30px;">🌟 Beauty Tips 🌟</h2>
+    
+    <div style="background-color: #fefae0; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="color: #606c38; margin-bottom: 15px;">Filter Options</h3>
+        <form method="GET" action="{{ url_for('main.beautytips') }}" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+            
+            <div style="flex: 1; min-width: 200px;">
+                <label for="skin_type" style="display: block; margin-bottom: 5px; font-weight: bold; color: #283618;">Skin Type:</label>
+                <select name="skin_type" id="skin_type" style="width: 100%; padding: 10px; border: 1px solid #dda15e; border-radius: 5px;">
+                    <option value="">All Skin Types</option>
+                    {% for st in skin_types %}
+                        <option value="{{ st }}" {% if selected_skin == st %}selected{% endif %}>{{ st }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div style="flex: 1; min-width: 200px;">
+                <label for="concern" style="display: block; margin-bottom: 5px; font-weight: bold; color: #283618;">Beauty Concern:</label>
+                <select name="concern" id="concern" style="width: 100%; padding: 10px; border: 1px solid #dda15e; border-radius: 5px;">
+                    <option value="">All Concerns</option>
+                    {% for c in concerns %}
+                        <option value="{{ c }}" {% if selected_concern == c %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div style="flex: 1; min-width: 200px;">
+                <label for="difficulty" style="display: block; margin-bottom: 5px; font-weight: bold; color: #283618;">Difficulty:</label>
+                <select name="difficulty" id="difficulty" style="width: 100%; padding: 10px; border: 1px solid #dda15e; border-radius: 5px;">
+                    <option value="">Any Difficulty</option>
+                    {% for d in difficulties %}
+                        <option value="{{ d }}" {% if selected_difficulty == d %}selected{% endif %}>{{ d }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div style="flex: 1; min-width: 200px; display: flex; align-items: flex-end;">
+                <button type="submit" style="background-color: #bc6c25; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold;">Apply Filters</button>
+            </div>
+            
+            {% if selected_skin or selected_concern or selected_difficulty %}
+            <div style="flex: 1; min-width: 100px; display: flex; align-items: flex-end;">
+                <a href="{{ url_for('main.beautytips') }}" style="display: block; text-align: center; background-color: #606c38; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; width: 100%; font-weight: bold;">Clear</a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+        {% if tips %}
+            {% for tip in tips %}
+            <div style="background-color: white; border: 1px solid #e9ecef; border-radius: 10px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
+                <h4 style="color: #bc6c25; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid #fefae0; padding-bottom: 10px;">💄 {{ tip.title }}</h4>
+                <p style="color: #495057; line-height: 1.6; margin-bottom: 15px;">{{ tip.description }}</p>
+                
+                <div style="font-size: 0.9rem; color: #6c757d;">
+                    <p style="margin-bottom: 5px;"><strong>Difficulty:</strong> 
+                        <span style="background-color: {% if tip.difficulty == 'Easy' %}#d4edda{% elif tip.difficulty == 'Moderate' %}#fff3cd{% else %}#f8d7da{% endif %}; color: {% if tip.difficulty == 'Easy' %}#155724{% elif tip.difficulty == 'Moderate' %}#856404{% else %}#721c24{% endif %}; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem;">
+                            {{ tip.difficulty }}
+                        </span>
+                    </p>
+                    <p style="margin-bottom: 5px;"><strong>Skin Types:</strong> 
+                        {% for st in tip.skin_types %}
+                            {{ st.value }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><strong>Addresses:</strong> 
+                        {% for c in tip.concerns %}
+                            {{ c.value }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 10px;">
+                <h3 style="color: #6c757d;">No beauty tips found matching your criteria.</h3>
+                <p>Try adjusting your filters or <a href="{{ url_for('main.beautytips') }}" style="color: #bc6c25;">clear filters</a>.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    /* Add hover effect for cards */
+    .container > div:last-child > div:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1) !important;
+    }
+</style>
+{% endblock %}

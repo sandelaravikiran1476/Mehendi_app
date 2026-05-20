@@ -16,6 +16,7 @@
             <ul class="nav-menu">
                 <li><a href="{{ url_for('main.index') }}" class="nav-link">Home</a></li>
                 <li><a href="{{ url_for('designs.all_designs') }}" class="nav-link">Gallery</a></li>
+                <li><a href="{{ url_for('main.beautytips') }}" class="nav-link">Beauty Tips</a></li>
                 {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('main.profile') }}" class="nav-link">My Profile</a></li>
                     <li><a href="{{ url_for('auth.logout') }}" class="nav-link logout-btn">Logout</a></li>
